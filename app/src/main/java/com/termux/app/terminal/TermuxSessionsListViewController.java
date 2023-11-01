@@ -23,7 +23,7 @@ import com.termux.app.TermuxActivity;
 import com.termux.shared.termux.shell.command.runner.terminal.TermuxSession;
 import com.termux.shared.theme.NightMode;
 import com.termux.shared.theme.ThemeUtils;
-import com.termux.terminal.TerminalSession;
+import com.termux.terminal.ProcessTerminalSession;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
 
         TextView sessionTitleView = sessionRowView.findViewById(R.id.session_title);
 
-        TerminalSession sessionAtRow = getItem(position).getTerminalSession();
+        ProcessTerminalSession sessionAtRow = getItem(position).getTerminalSession();
         if (sessionAtRow == null) {
             sessionTitleView.setText("null session");
             return sessionRowView;

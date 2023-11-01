@@ -16,6 +16,7 @@ import com.termux.shared.errors.Errno;
 import com.termux.shared.logger.Logger;
 import com.termux.shared.shell.command.environment.IShellEnvironment;
 import com.termux.shared.shell.ShellUtils;
+import com.termux.terminal.ProcessTerminalSession;
 import com.termux.terminal.TerminalSession;
 import com.termux.terminal.TerminalSessionClient;
 
@@ -26,19 +27,19 @@ import java.util.List;
 
 /**
  * A class that maintains info for foreground Termux sessions.
- * It also provides a way to link each {@link TerminalSession} with the {@link ExecutionCommand}
+ * It also provides a way to link each {@link ProcessTerminalSession} with the {@link ExecutionCommand}
  * that started it.
  */
 public class TermuxSession {
 
-    private final TerminalSession mTerminalSession;
+    private final ProcessTerminalSession mTerminalSession;
     private final ExecutionCommand mExecutionCommand;
     private final TermuxSessionClient mTermuxSessionClient;
     private final boolean mSetStdoutOnExit;
 
     private static final String LOG_TAG = "TermuxSession";
 
-    private TermuxSession(@NonNull final TerminalSession terminalSession, @NonNull final ExecutionCommand executionCommand,
+    private TermuxSession(@NonNull final ProcessTerminalSession terminalSession, @NonNull final ExecutionCommand executionCommand,
                           final TermuxSessionClient termuxSessionClient, final boolean setStdoutOnExit) {
         this.mTerminalSession = terminalSession;
         this.mExecutionCommand = executionCommand;
@@ -67,7 +68,7 @@ public class TermuxSession {
      *                              variables will be overridden.
      * @param setStdoutOnExit If set to {@code true}, then the {@link ResultData#stdout}
      *                        available in the {@link TermuxSessionClient#onTermuxSessionExited(TermuxSession)}
-     *                        callback will be set to the {@link TerminalSession} transcript. The session
+     *                        callback will be set to the {@link ProcessTerminalSession} transcript. The session
      *                        transcript will contain both stdout and stderr combined, basically
      *                        anything sent to the the pseudo terminal /dev/pts, including PS1 prefixes.
      *                        Set this to {@code true} only if the session transcript is required,
@@ -153,7 +154,7 @@ public class TermuxSession {
             Joiner.on("\n").join(environmentArray));
 
         Logger.logDebug(LOG_TAG, "Running \"" + executionCommand.getCommandIdAndLabelLogString() + "\" TermuxSession");
-        TerminalSession terminalSession = new TerminalSession(executionCommand.executable,
+        ProcessTerminalSession terminalSession = new ProcessTerminalSession(executionCommand.executable,
             executionCommand.workingDirectory, executionCommand.arguments, environmentArray,
             executionCommand.terminalTranscriptRows, terminalSessionClient);
 
@@ -272,7 +273,7 @@ public class TermuxSession {
         }
     }
 
-    public TerminalSession getTerminalSession() {
+    public ProcessTerminalSession getTerminalSession() {
         return mTerminalSession;
     }
 

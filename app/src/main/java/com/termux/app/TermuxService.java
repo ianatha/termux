@@ -45,6 +45,7 @@ import com.termux.shared.data.DataUtils;
 import com.termux.shared.shell.command.ExecutionCommand;
 import com.termux.shared.shell.command.ExecutionCommand.Runner;
 import com.termux.shared.shell.command.ExecutionCommand.ShellCreateMode;
+import com.termux.terminal.ProcessTerminalSession;
 import com.termux.terminal.TerminalEmulator;
 import com.termux.terminal.TerminalSession;
 import com.termux.terminal.TerminalSessionClient;
@@ -77,13 +78,13 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
     private final Handler mHandler = new Handler();
 
 
-    /** The full implementation of the {@link TerminalSessionClient} interface to be used by {@link TerminalSession}
+    /** The full implementation of the {@link TerminalSessionClient} interface to be used by {@link ProcessTerminalSession}
      * that holds activity references for activity related functions.
      * Note that the service may often outlive the activity, so need to clear this reference.
      */
     private TermuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
 
-    /** The basic implementation of the {@link TerminalSessionClient} interface to be used by {@link TerminalSession}
+    /** The basic implementation of the {@link TerminalSessionClient} interface to be used by {@link ProcessTerminalSession}
      * that does not hold activity references and only a service reference.
      */
     private final TermuxTerminalSessionServiceClient mTermuxTerminalSessionServiceClient = new TermuxTerminalSessionServiceClient(this);
@@ -681,7 +682,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
     }
 
     /** Process session action for new session. */
-    private void handleSessionAction(int sessionAction, TerminalSession newTerminalSession) {
+    private void handleSessionAction(int sessionAction, ProcessTerminalSession newTerminalSession) {
         Logger.logDebug(LOG_TAG, "Processing sessionAction \"" + sessionAction + "\" for session \"" + newTerminalSession.mSessionName + "\"");
 
         switch (sessionAction) {
@@ -750,7 +751,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
     }
 
     /** This should be called when {@link TermuxActivity#onServiceConnected} is called to set the
-     * {@link TermuxService#mTermuxTerminalSessionActivityClient} variable and update the {@link TerminalSession}
+     * {@link TermuxService#mTermuxTerminalSessionActivityClient} variable and update the {@link ProcessTerminalSession}
      * and {@link TerminalEmulator} clients in case they were passed {@link TermuxTerminalSessionServiceClient}
      * earlier.
      *
@@ -765,7 +766,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
     }
 
     /** This should be called when {@link TermuxActivity} has been destroyed and in {@link #onUnbind(Intent)}
-     * so that the {@link TermuxService} and {@link TerminalSession} and {@link TerminalEmulator}
+     * so that the {@link TermuxService} and {@link ProcessTerminalSession} and {@link TerminalEmulator}
      * clients do not hold an activity references.
      */
     public synchronized void unsetTermuxTerminalSessionClient() {
@@ -862,7 +863,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
 
 
 
-    private void setCurrentStoredTerminalSession(TerminalSession terminalSession) {
+    private void setCurrentStoredTerminalSession(ProcessTerminalSession terminalSession) {
         if (terminalSession == null) return;
         // Make the newly created session the current one to be displayed
         TermuxAppSharedPreferences preferences = TermuxAppSharedPreferences.build(this);
@@ -920,7 +921,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
         TerminalSession terminalSession;
         for (int i = 0, len = mShellManager.mTermuxSessions.size(); i < len; i++) {
             terminalSession = mShellManager.mTermuxSessions.get(i).getTerminalSession();
-            if (terminalSession.mHandle.equals(sessionHandle))
+            if (terminalSession.getHandle() == sessionHandle)
                 return terminalSession;
         }
         return null;

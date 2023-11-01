@@ -56,6 +56,7 @@ import com.termux.shared.termux.settings.properties.TermuxAppSharedProperties;
 import com.termux.shared.termux.theme.TermuxThemeUtils;
 import com.termux.shared.theme.NightMode;
 import com.termux.shared.view.ViewUtils;
+import com.termux.terminal.ProcessTerminalSession;
 import com.termux.terminal.TerminalSession;
 import com.termux.terminal.TerminalSessionClient;
 import com.termux.view.TerminalView;
@@ -101,7 +102,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     /**
      *  The {@link TerminalSessionClient} interface implementation to allow for communication between
-     *  {@link TerminalSession} and {@link TermuxActivity}.
+     *  {@link ProcessTerminalSession} and {@link TermuxActivity}.
      */
     TermuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
 
@@ -901,9 +902,9 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
     @Nullable
-    public TerminalSession getCurrentSession() {
+    public ProcessTerminalSession getCurrentSession() {
         if (mTerminalView != null)
-            return mTerminalView.getCurrentSession();
+            return (ProcessTerminalSession) mTerminalView.getCurrentSession();
         else
             return null;
     }

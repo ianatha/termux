@@ -155,7 +155,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         if (termuxSession != null) {
             isPluginExecutionCommandWithPendingResult = termuxSession.getExecutionCommand().isPluginExecutionCommandWithPendingResult();
             if (isPluginExecutionCommandWithPendingResult)
-                Logger.logVerbose(LOG_TAG, "The \"" + finishedSession.mSessionName + "\" session will be force finished automatically since result in pending.");
+                Logger.logVerbose(LOG_TAG, "The \"" + finishedSession.getSessionName() + "\" session will be force finished automatically since result in pending.");
         }
 
         if (mActivity.isVisible() && finishedSession != mActivity.getCurrentSession()) {
@@ -344,7 +344,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     public void renameSession(final TerminalSession sessionToRename) {
         if (sessionToRename == null) return;
 
-        TextInputDialogUtils.textInput(mActivity, R.string.title_rename_session, sessionToRename.mSessionName, R.string.action_rename_session_confirm, text -> {
+        TextInputDialogUtils.textInput(mActivity, R.string.title_rename_session, sessionToRename.getSessionName(), R.string.action_rename_session_confirm, text -> {
             renameSession(sessionToRename, text);
             termuxSessionListNotifyUpdated();
         }, -1, null, -1, null, null);
@@ -352,7 +352,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
 
     private void renameSession(TerminalSession sessionToRename, String text) {
         if (sessionToRename == null) return;
-        sessionToRename.mSessionName = text;
+        sessionToRename.setSessionName(text);
         TermuxService service = mActivity.getTermuxService();
         if (service != null) {
             TermuxSession termuxSession = service.getTermuxSessionForTerminalSession(sessionToRename);
@@ -391,7 +391,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     public void setCurrentStoredSession() {
         TerminalSession currentSession = mActivity.getCurrentSession();
         if (currentSession != null)
-            mActivity.getPreferences().setCurrentSession(currentSession.mHandle);
+            mActivity.getPreferences().setCurrentSession(currentSession.getHandle());
         else
             mActivity.getPreferences().setCurrentSession(null);
     }
@@ -478,13 +478,13 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         final int indexOfSession = service.getIndexOfSession(session);
         if (indexOfSession < 0) return null;
         StringBuilder toastTitle = new StringBuilder("[" + (indexOfSession + 1) + "]");
-        if (!TextUtils.isEmpty(session.mSessionName)) {
-            toastTitle.append(" ").append(session.mSessionName);
+        if (!TextUtils.isEmpty(session.getSessionName())) {
+            toastTitle.append(" ").append(session.getSessionName());
         }
         String title = session.getTitle();
         if (!TextUtils.isEmpty(title)) {
             // Space to "[${NR}] or newline after session name:
-            toastTitle.append(session.mSessionName == null ? " " : "\n");
+            toastTitle.append(session.getSessionName() == null ? " " : "\n");
             toastTitle.append(title);
         }
         return toastTitle.toString();

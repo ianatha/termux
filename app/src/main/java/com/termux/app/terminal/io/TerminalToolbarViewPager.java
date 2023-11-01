@@ -12,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.termux.R;
 import com.termux.app.TermuxActivity;
 import com.termux.shared.termux.extrakeys.ExtraKeysView;
-import com.termux.terminal.TerminalSession;
+import com.termux.terminal.ProcessTerminalSession;
 
 public class TerminalToolbarViewPager {
 
@@ -65,7 +65,7 @@ public class TerminalToolbarViewPager {
                 }
 
                 editText.setOnEditorActionListener((v, actionId, event) -> {
-                    TerminalSession session = mActivity.getCurrentSession();
+                    ProcessTerminalSession session = mActivity.getCurrentSession();
                     if (session != null) {
                         if (session.isRunning()) {
                             String textToSend = editText.getText().toString();
