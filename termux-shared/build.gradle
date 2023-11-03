@@ -60,7 +60,6 @@ android {
             path file('src/main/cpp/Android.mk')
         }
     }
-    namespace 'com.termux.shared'
 }
 
 dependencies {

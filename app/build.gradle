@@ -110,6 +110,9 @@ android {
         }
     }
 
+    lintOptions {
+        disable 'ProtectedPermissions'
+    }
 
     testOptions {
         unitTests {
@@ -121,10 +124,6 @@ android {
         jniLibs {
             useLegacyPackaging true
         }
-    }
-    namespace 'com.termux'
-    lint {
-        disable 'ProtectedPermissions'
     }
 
     applicationVariants.all { variant ->

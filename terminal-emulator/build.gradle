@@ -41,7 +41,6 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-    namespace 'com.termux.terminal'
 }
 
 tasks.withType(Test) {
